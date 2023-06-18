@@ -50,4 +50,16 @@ class MainViewModel : ViewModel() {
 
         _asteroids.postValue(mockAsteroidList)
     }
+
+    private val _navigateToAsteroidDetails = MutableLiveData<Asteroid?>()
+    val navigateToAsteroidDetails
+        get() = _navigateToAsteroidDetails
+
+    fun onAsteroidItemClicked(asteroidData: Asteroid) {
+        _navigateToAsteroidDetails.value = asteroidData
+    }
+
+    fun onAsteroidDetailsNavigated() {
+        _navigateToAsteroidDetails.value = null
+    }
 }
