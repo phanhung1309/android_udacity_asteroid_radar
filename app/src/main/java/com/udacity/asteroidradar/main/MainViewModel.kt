@@ -1,18 +1,18 @@
 package com.udacity.asteroidradar.main
 
-import androidx.lifecycle.LiveData
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants.API_KEY
-import com.udacity.asteroidradar.api.AsteroidApi
+import com.udacity.asteroidradar.database.AsteroidDatabase
+import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val database = AsteroidDatabase.getInstance(application)
+    private val repository = AsteroidRepository(database)
+    val asteroids = repository.asteroids
 
     private val _navigateToAsteroidDetails = MutableLiveData<Asteroid?>()
     val navigateToAsteroidDetails
@@ -25,8 +25,7 @@ class MainViewModel : ViewModel() {
     private fun getAsteroids() {
         viewModelScope.launch {
             try {
-                val result = AsteroidApi.getAsteroids(API_KEY)
-                _asteroids.postValue(result)
+                repository.refreshAsteroids()
 
             } catch (e: Exception) {
                 e.printStackTrace()
