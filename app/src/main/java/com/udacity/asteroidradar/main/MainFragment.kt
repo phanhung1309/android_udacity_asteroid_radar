@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -29,6 +30,15 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
         viewModel.asteroids.observe(viewLifecycleOwner) { asteroids ->
             adapter.submitList(asteroids)
+        }
+
+        viewModel.pictureOfDay.observe(viewLifecycleOwner) { pictureOfDay ->
+            pictureOfDay?.let {
+                Picasso.with(requireContext())
+                    .load(pictureOfDay.url)
+                    .into(binding.activityMainImageOfTheDay)
+                binding.activityMainImageOfTheDay.contentDescription = pictureOfDay.title
+            }
         }
 
         viewModel.navigateToAsteroidDetails.observe(viewLifecycleOwner) { asteroid ->

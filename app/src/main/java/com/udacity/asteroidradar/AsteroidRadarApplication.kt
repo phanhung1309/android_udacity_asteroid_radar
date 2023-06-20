@@ -21,6 +21,7 @@ class AsteroidRadarApplication : Application() {
     private fun setupRecurringWork() {
         val constants = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
             .setRequiresCharging(true)
             .apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
